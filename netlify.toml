@@ -10,3 +10,8 @@
   from = "/api/gemini"
   to = "/.netlify/functions/gemini"
   status = 200
+
+   [[redirects]]
+  from = "/getip"
+  to = "/.netlify/functions/getip"
+  status = 200
