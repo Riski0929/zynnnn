@@ -15,3 +15,8 @@
   from = "/getip"
   to = "/.netlify/functions/getip"
   status = 200
+
+  [[redirects]]
+  from = "/owner/info"
+  to = "/.netlify/functions/info"
+  status = 200
