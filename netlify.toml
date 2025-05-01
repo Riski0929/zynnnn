@@ -22,8 +22,8 @@
   status = 200
 
   [[redirects]]
-  from = "/owner/listip"
-  to = "/.netlify/functions/ips"
+  from = "/api/igdl"
+  to = "/.netlify/functions/igdl"
   status = 200
 
   [[redirects]]
