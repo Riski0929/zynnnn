@@ -20,3 +20,14 @@
   from = "/owner/info"
   to = "/.netlify/functions/info"
   status = 200
+
+  [[redirects]]
+  from = "/owner/listip"
+  to = "/.netlify/functions/ips"
+  status = 200
+
+  [[redirects]]
+  from = "/ip"
+  to = "/.netlify/functions/ip"
+  status = 200
+  
