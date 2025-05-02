@@ -17,8 +17,8 @@
   status = 200
   
   [[redirects]]
-  from = "/owner/info"
-  to = "/.netlify/functions/info"
+  from = "/api/tebakkata"
+  to = "/.netlify/functions/tebakkata"
   status = 200
 
   [[redirects]]
