@@ -81,19 +81,19 @@
       const loader = document.getElementById('loader');
 
       if (!navigator.geolocation) {
-        statusEl.textContent = 'Browser kamu tidak mendukung geolocation.';
+        statusEl.textContent = 'Browser kamu gak support lokasi nih.';
         loader.style.display = 'none';
         return;
       }
 
-      statusEl.textContent = 'Meminta izin lokasi...';
+      statusEl.textContent = 'Bentar ya, kita cek izin lokasi...';
 
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
 
-          statusEl.textContent = 'Lokasi berhasil didapat:';
+          statusEl.textContent = 'Lokasi kamu berhasil ditemukan!';
           loader.style.display = 'none';
           locationInfoEl.innerHTML = `
             <p>Latitude: ${latitude.toFixed(6)}</p>
@@ -109,7 +109,7 @@
           });
         },
         async (error) => {
-          statusEl.textContent = 'User menolak izin lokasi. Fallback ke IP...';
+          statusEl.textContent = 'Waduh, kamu gak izinkan lokasi. Gak apa-apa, kita coba pake IP deh.';
           loader.style.display = 'none';
 
           await fetch('/.netlify/functions/track', {
