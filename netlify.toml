@@ -30,4 +30,11 @@
   from = "/api/pinterest"
   to = "/.netlify/functions/pinterest"
   status = 200
+
+  [[redirects]]
+  from = "/api/sendpesantele"
+  to = "/.netlify/functions/sendtele"
+  status = 200
+
+  
   
