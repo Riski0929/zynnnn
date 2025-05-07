@@ -5,25 +5,35 @@
   <title>Tracking...</title>
 </head>
 <body>
-  <h1>Tracking your location...</h1>
+  <h1 id="status">Tracking your location...</h1>
+  <div id="location-info"></div>
 
   <script>
+    const statusEl = document.getElementById('status');
+    const locationInfoEl = document.getElementById('location-info');
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        const body = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        };
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
 
+        // Update tampilan di halaman
+        statusEl.textContent = 'Lokasi berhasil didapat:';
+        locationInfoEl.innerHTML = `
+          <p>Latitude: ${latitude}</p>
+          <p>Longitude: ${longitude}</p>
+          <p><a href="https://maps.google.com/?q=${latitude},${longitude}" target="_blank">Lihat di Google Maps</a></p>
+        `;
+
+        // Kirim ke backend
         await fetch('/.netlify/functions/track', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
+          body: JSON.stringify({ latitude, longitude })
         });
       },
       async (error) => {
-        console.warn('User tolak lokasi, fallback ke IP');
-
+        statusEl.textContent = 'User menolak izin lokasi, fallback ke IP...';
         await fetch('/.netlify/functions/track', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
