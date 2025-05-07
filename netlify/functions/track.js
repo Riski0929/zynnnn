@@ -1,4 +1,4 @@
-const axios = require('axios')
+const axios = require('axios');
 const nodemailer = require('nodemailer');
 
 exports.handler = async (event) => {
