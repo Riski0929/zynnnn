@@ -27,7 +27,7 @@
   status = 200
 
   [[redirects]]
-  from = "/anime"
-  to = "/.netlify/functions/getip"
+  from = "/api/pinterest"
+  to = "/.netlify/functions/pinterest"
   status = 200
   
