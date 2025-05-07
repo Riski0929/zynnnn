@@ -20,7 +20,7 @@ Location: ${data.loc}
 Org: ${data.org}`
     }, {
       headers: {
-        'api-key': process.env.ZYNN_KEY,
+        'api-key': process.env.BREVO_KEY,
         'Content-Type': 'application/json'
       }
     });
