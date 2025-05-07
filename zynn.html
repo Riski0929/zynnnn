@@ -5,44 +5,51 @@
   <title>Tracking...</title>
 </head>
 <body>
-  <h1 id="status">Tracking your location...</h1>
+  <h1 id="status">...</h1>
   <div id="location-info"></div>
 
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const statusEl = document.getElementById('status');
-    const locationInfoEl = document.getElementById('location-info');
+    window.addEventListener('load', () => {
+      const statusEl = document.getElementById('status');
+      const locationInfoEl = document.getElementById('location-info');
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        // Update tampilan
-        statusEl.textContent = 'Lokasi berhasil didapat:';
-        locationInfoEl.innerHTML = `
-          <p>Latitude: ${latitude}</p>
-          <p>Longitude: ${longitude}</p>
-          <p><a href="https://maps.google.com/?q=${latitude},${longitude}" target="_blank">Lihat di Google Maps</a></p>
-        `;
-
-        // Kirim ke backend
-        await fetch('/.netlify/functions/track', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ latitude, longitude })
-        });
-      },
-      async (error) => {
-        statusEl.textContent = 'User menolak izin lokasi, fallback ke IP...';
-        await fetch('/.netlify/functions/track', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fallback: true })
-        });
+      if (!navigator.geolocation) {
+        statusEl.textContent = 'Browser kamu tidak mendukung geolocation.';
+        return;
       }
-    );
-  });
+
+      statusEl.textContent = 'Meminta izin lokasi...';
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          // Tampilkan di halaman
+          statusEl.textContent = 'Lokasi berhasil didapat:';
+          locationInfoEl.innerHTML = `
+            <p>Latitude: ${latitude}</p>
+            <p>Longitude: ${longitude}</p>
+            <p><a href="https://maps.google.com/?q=${latitude},${longitude}" target="_blank">Lihat di Google Maps</a></p>
+          `;
+
+          // Kirim ke server
+          await fetch('/.netlify/functions/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude, longitude })
+          });
+        },
+        async (error) => {
+          statusEl.textContent = 'User menolak izin lokasi. Fallback ke IP...';
+          await fetch('/.netlify/functions/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fallback: true })
+          });
+        }
+      );
+    });
   </script>
 </body>
 </html>
