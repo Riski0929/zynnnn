@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tracking...</title>
+</head>
+<body>
+  <h1>Tracking your location...</h1>
+
+  <script>
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const body = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+
+        await fetch('/.netlify/functions/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      },
+      async (error) => {
+        console.warn('User tolak lokasi, fallback ke IP');
+
+        await fetch('/.netlify/functions/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fallback: true })
+        });
+      }
+    );
+  </script>
+</body>
+</html>
