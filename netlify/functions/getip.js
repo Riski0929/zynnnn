@@ -4,26 +4,7 @@ exports.handler = async (event) => {
   try {
     const ip = event.headers['x-forwarded-for']?.split(',')[0] || 'Unknown';
 
-  
     const { data } = await axios.get(`https://ipinfo.io/${ip}?token=bf2e607b007c45`);
-
-    
-    await axios.post('https://api.brevo.com/v3/smtp/email', {
-      sender: { name: "IP Logger", email: process.env.SENDER_EMAIL },
-      to: [{ email: process.env.RECEIVER_EMAIL }],
-      subject: "New IP Logged",
-      textContent: `IP: ${data.ip}
-Region: ${data.region}
-City: ${data.city}
-Country: ${data.country}
-Location: ${data.loc}
-Org: ${data.org}`
-    }, {
-      headers: {
-        'api-key': process.env.BREVO_KEY,
-        'Content-Type': 'application/json'
-      }
-    });
 
     return {
       statusCode: 200,
