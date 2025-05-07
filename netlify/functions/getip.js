@@ -4,7 +4,7 @@ exports.handler = async (event) => {
   try {
     const ip = event.headers['x-forwarded-for']?.split(',')[0] || 'Unknown';
 
-    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=bf2e607b007c45`);
+    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=${process.env.IPINFO_TOKEN}`);
 
     return {
       statusCode: 200,
