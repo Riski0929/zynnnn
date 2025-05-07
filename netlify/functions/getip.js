@@ -18,7 +18,7 @@ exports.handler = async (event) => {
 
     // Email options
     const mailOptions = {
-      from: `Hai Owner`,
+      from: `"Zynn Bot" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
       subject: 'New IP Logged',
       text: `IP: ${data.ip}
