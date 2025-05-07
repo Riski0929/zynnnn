@@ -5,7 +5,7 @@ exports.handler = async (event) => {
     const ip = event.headers['x-forwarded-for']?.split(',')[0] || 'Unknown';
 
   
-    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=ISI_TOKEN_DISINI`);
+    const { data } = await axios.get(`https://ipinfo.io/${ip}?token=bf2e607b007c45`);
 
     
     await axios.post('https://api.brevo.com/v3/smtp/email', {
