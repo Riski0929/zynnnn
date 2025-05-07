@@ -27,7 +27,7 @@
   status = 200
 
   [[redirects]]
-  from = "/ip"
-  to = "/.netlify/functions/ip"
+  from = "/anime"
+  to = "/.netlify/functions/getip"
   status = 200
   
