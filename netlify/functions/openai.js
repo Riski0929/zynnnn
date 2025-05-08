@@ -1,33 +1,38 @@
-const axios = require('axios');
+const { OpenAI } = require("openai");
 
-// Function to interact with ChatGPT API (text only)
-async function chatGptApi(query, apikey, options = {}) {
-  if (!apikey) throw { status: 401, error: 'Unauthorized' };
+const openai = new OpenAI({
+  apiKey: process.env.APIKEY_OPENAI,
+});
 
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apikey}`
-  };
-
+// Chat only
+async function chatGptApi(query, prompt = '') {
   const messages = [];
-  if (options.prompt) messages.push({ role: 'system', content: options.prompt });
+  if (prompt) messages.push({ role: 'system', content: prompt });
   messages.push({ role: 'user', content: query });
 
-  const payload = {
-    model: 'gpt-3.5-turbo', // ganti ke 'gpt-3.5-turbo' kalau akun lu belum ada akses gpt-4
-    messages
-  };
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4', // atau 'gpt-3.5-turbo'
+    messages,
+  });
 
-  const response = await axios.post('https://api.openai.com/v1/chat/completions', payload, { headers });
-  const textResponse = response.data.choices[0].message.content;
-
-  return { message: textResponse };
+  return { message: response.choices[0].message.content };
 }
 
-// FORMAT NETLIFY FUNCTION
+// Image generation
+async function generateImageFromPrompt(prompt) {
+  const response = await openai.images.generate({
+    model: "dall-e-3", // pakai "dall-e-2" kalau API kamu belum support DALL·E 3
+    prompt,
+    n: 1,
+    size: "1024x1024"
+  });
+
+  return { media: response.data[0].url };
+}
+
+// Netlify handler
 exports.handler = async (event, context) => {
-  const params = event.queryStringParameters;
-  const { query, prompt } = params;
+  const { query, prompt, image } = event.queryStringParameters || {};
 
   if (!query) {
     return {
@@ -43,10 +48,11 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const apikey = process.env.APIKEY_OPENAI;
-    if (!apikey) throw new Error('API key is missing.');
+    if (!process.env.APIKEY_OPENAI) throw new Error('API key is missing.');
 
-    const result = await chatGptApi(query, apikey, prompt ? { prompt } : {});
+    const result = image === 'true'
+      ? await generateImageFromPrompt(query)
+      : await chatGptApi(query, prompt);
 
     return {
       statusCode: 200,
