@@ -8,6 +8,7 @@
     "cheerio": "^1.0.0-rc.12",
     "@google/generative-ai": "^0.24.0",
     "form-data": "^4.0.0",
-    "nodemailer": "latest" 
+    "nodemailer": "latest",
+    "openai": "latest"
   }
 }
