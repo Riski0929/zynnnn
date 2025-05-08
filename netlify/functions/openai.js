@@ -11,7 +11,7 @@ async function chatGptApi(query, prompt = '') {
   messages.push({ role: 'user', content: query });
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4', // atau 'gpt-3.5-turbo'
+    model: 'gpt-3.5-turbo', // atau 'gpt-3.5-turbo'
     messages,
   });
 
