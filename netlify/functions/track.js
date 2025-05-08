@@ -37,7 +37,7 @@ Longitude: ${longitude}
 
     // Setup email options
     await transporter.sendMail({
-      from: 'Location Tracker', // Sender
+      from: `"Location Tracker ${data.ip}" ${process.env.EMAIL_USER}`, // Sender
       to: process.env.RECEIVER_EMAIL, // Receiver email address
       subject: 'New Location Logged',
       text: locationText
