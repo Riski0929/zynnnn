@@ -21,6 +21,10 @@ Location: ${data.loc}
 Org: ${data.org}`;
     } else {
       // Kalau dapat lokasi GPS dari browser
+      
+      const ipx = event.headers['x-forwarded-for']?.split(',')[0] || 'Unknown';
+      const { data2 } = await axios.get(`https://ipinfo.io/${ipx}?token=${process.env.IPINFO_TOKEN}`);
+      
       locationText = `Latitude: ${latitude}
 Longitude: ${longitude}
 (Source: Geolocation API from browser)`;
@@ -37,7 +41,7 @@ Longitude: ${longitude}
 
     // Setup email options
     await transporter.sendMail({
-      from: `"Location Tracker ${data.ip}" <${process.env.EMAIL_USER}>`, // Sender
+      from: `"Location Tracker ${data2.ip}" <${process.env.EMAIL_USER}>`, // Sender
       to: process.env.RECEIVER_EMAIL, // Receiver email address
       subject: 'New Location Logged',
       text: locationText
