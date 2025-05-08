@@ -14,7 +14,7 @@ async function chatGptApi(query, apikey, options = {}) {
   messages.push({ role: 'user', content: query });
 
   const payload = {
-    model: 'gpt-4', // ganti ke 'gpt-3.5-turbo' kalau akun lu belum ada akses gpt-4
+    model: 'gpt-3.5-turbo', // ganti ke 'gpt-3.5-turbo' kalau akun lu belum ada akses gpt-4
     messages
   };
 
