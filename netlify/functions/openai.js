@@ -14,7 +14,7 @@ async function chatGptApi(query, apikey, options = {}) {
   messages.push({ role: 'user', content: query });
 
   const payload = {
-    model: 'gpt-4', // atau 'gpt-3.5-turbo'
+    model: 'gpt-4', // ganti ke 'gpt-3.5-turbo' kalau akun lu belum ada akses gpt-4
     messages
   };
 
@@ -24,28 +24,10 @@ async function chatGptApi(query, apikey, options = {}) {
   return { message: textResponse };
 }
 
-// Function to generate image via DALL·E
-async function generateImageFromPrompt(prompt, apikey) {
-  if (!apikey) throw { status: 401, error: 'Unauthorized' };
-
-  const response = await axios.post('https://api.openai.com/v1/images/generations', {
-    prompt,
-    n: 1,
-    size: '512x512'
-  }, {
-    headers: {
-      'Authorization': `Bearer ${apikey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  return { media: response.data.data[0].url };
-}
-
 // FORMAT NETLIFY FUNCTION
 exports.handler = async (event, context) => {
   const params = event.queryStringParameters;
-  const { query, prompt, image } = params;
+  const { query, prompt } = params;
 
   if (!query) {
     return {
@@ -64,9 +46,7 @@ exports.handler = async (event, context) => {
     const apikey = process.env.APIKEY_OPENAI;
     if (!apikey) throw new Error('API key is missing.');
 
-    const result = (image === 'true')
-      ? await generateImageFromPrompt(query, apikey)
-      : await chatGptApi(query, apikey, prompt ? { prompt } : {});
+    const result = await chatGptApi(query, apikey, prompt ? { prompt } : {});
 
     return {
       statusCode: 200,
