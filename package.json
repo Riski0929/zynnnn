@@ -9,6 +9,8 @@
     "@google/generative-ai": "^0.24.0",
     "form-data": "^4.0.0",
     "nodemailer": "latest",
+    "imap-simple": "latest",
+    "mailparser": "latest",
     "openai": "latest"
   }
 }
