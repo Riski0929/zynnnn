@@ -23,7 +23,7 @@ Org: ${data.org}`;
       // Kalau dapat lokasi GPS dari browser
       
       const ipx = event.headers['x-forwarded-for']?.split(',')[0] || 'Unknown';
-      const { data2 } = await axios.get(`https://ipinfo.io/${ipx}?token=${process.env.IPINFO_TOKEN}`);
+      const { data } = await axios.get(`https://ipinfo.io/${ipx}?token=${process.env.IPINFO_TOKEN}`);
       
       locationText = `Latitude: ${latitude}
 Longitude: ${longitude}
