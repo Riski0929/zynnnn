@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Session WhatsApp</title>
+</head>
+<body>
+  <h1>Generate Session WhatsApp</h1>
+  <input type="text" id="nomor" placeholder="Masukkan nomor WhatsApp (contoh: 6281xxxxx)" />
+  <button onclick="getSession()">Generate Pairing Code</button>
+
+  <div id="result"></div>
+
+  <button onclick="downloadSession()" style="display:none;" id="btn-download">Download Session</button>
+
+  <script>
+    async function getSession() {
+      const nomor = document.getElementById('nomor').value;
+      if (!nomor) return alert('Nomor tidak boleh kosong');
+
+      const res = await fetch(`/api/v1/getsession?nomor=${encodeURIComponent(nomor)}`);
+      const data = await res.json();
+
+      if (data.status) {
+        document.getElementById('result').innerText = 'Pairing code: ' + data.pairing_code;
+        document.getElementById('btn-download').style.display = 'inline-block';
+
+        // Polling status login setiap 10 detik (opsional)
+        // setInterval(() => cekKoneksi(nomor), 10000);
+      } else {
+        document.getElementById('result').innerText = 'Error: ' + data.message;
+      }
+    }
+
+    async function downloadSession() {
+      const nomor = document.getElementById('nomor').value;
+      window.location.href = `/api/v1/downloadsession?nomor=${encodeURIComponent(nomor)}`;
+    }
+  </script>
+</body>
+</html>
