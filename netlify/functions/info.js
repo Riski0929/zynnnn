@@ -1,6 +1,6 @@
 // Ambil IP dari memory global
 let ipList = global.ipList || [];
-global.ipList = ipList;
+global.ipList = ipList
 
 exports.handler = async () => {
   try {
