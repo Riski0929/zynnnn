@@ -18,7 +18,7 @@
       const nomor = document.getElementById('nomor').value;
       if (!nomor) return alert('Nomor tidak boleh kosong');
 
-      const res = await fetch(`/api/v1/getsession?nomor=${encodeURIComponent(nomor)}`);
+      const res = await fetch(`https://zynn.koyeb.app/api/v1/getsession?nomor=${encodeURIComponent(nomor)}`);
       const data = await res.json();
 
       if (data.status) {
@@ -34,7 +34,7 @@
 
     async function downloadSession() {
       const nomor = document.getElementById('nomor').value;
-      window.location.href = `/api/v1/downloadsession?nomor=${encodeURIComponent(nomor)}`;
+      window.location.href = `https://zynn.koyeb.app/api/v1/downloadsession?nomor=${encodeURIComponent(nomor)}`;
     }
   </script>
 </body>
